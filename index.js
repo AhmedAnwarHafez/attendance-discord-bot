@@ -1,8 +1,8 @@
 const { Client, GatewayIntentBits } = require('discord.js')
 const AsciiTable = require('ascii-table')
+const dotenv = require('dotenv')
 
 const { addAttendance, getAttendanceByDate } = require('./db/attendance')
-const dotenv = require('dotenv')
 
 dotenv.config()
 const client = new Client({ intents: [GatewayIntentBits.Guilds] })
