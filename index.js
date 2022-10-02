@@ -1,12 +1,11 @@
-// Require the necessary discord.js classes
 const { Client, GatewayIntentBits } = require('discord.js')
+
+const { addAttendance, listAttendance } = require('./db/attendance')
 const dotenv = require('dotenv')
 
 dotenv.config()
-// Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] })
 
-// When the client is ready, run this code (only once)
 client.once('ready', () => {
   console.log('Ready!')
 })
@@ -15,9 +14,11 @@ client.on('interactionCreate', async (interaction) => {
   if (!interaction.isChatInputCommand()) return
 
   const { commandName } = interaction
-  console.log(JSON.stringify(interaction.member, null, 2))
 
   if (commandName === 'list') {
+    const cohort = interaction.channel.parent.name
+    const attendances = await listAttendance(cohort, new Date())
+    console.log(attendances)
     await interaction.reply({ content: 'Pong!', ephemeral: true })
   } else if (commandName === 'attend') {
     const nickname =
@@ -31,8 +32,15 @@ client.on('interactionCreate', async (interaction) => {
       userId,
     }
 
-    // do something with data
+    const { error } = await addAttendance(data)
 
+    if (error) {
+      console.error(error)
+      await interaction.reply({
+        content: 'Something went wrong',
+        ephemeral: true,
+      })
+    }
     await interaction.reply({
       content: 'Kia pai te ra 😄',
       ephemeral: true,
