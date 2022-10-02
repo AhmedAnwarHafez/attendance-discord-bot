@@ -9,7 +9,7 @@ const token = process.env.DISCORD_TOKEN
 const commands = [
   new SlashCommandBuilder().setName('attend').setDescription("I've arrived"),
   new SlashCommandBuilder()
-    .setName('/list')
+    .setName('list')
     .setDescription('List students and their attendance status'),
 ].map((command) => command.toJSON())
 
