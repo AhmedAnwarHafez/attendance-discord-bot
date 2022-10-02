@@ -1,8 +1,8 @@
 const { Client, GatewayIntentBits } = require('discord.js')
-const AsciiTable = require('ascii-table')
 const dotenv = require('dotenv')
 
 const { addAttendance, getAttendanceByDate } = require('./db/attendance')
+const { toTable } = require('./utils')
 
 dotenv.config()
 const client = new Client({ intents: [GatewayIntentBits.Guilds] })
@@ -18,17 +18,10 @@ client.on('interactionCreate', async (interaction) => {
 
   if (commandName === 'list') {
     const cohort = interaction.channel.parent.name
-    const attendances = await getAttendanceByDate(cohort, new Date())
-    console.log(attendances)
-    const table = new AsciiTable("Today's attendance")
-    table.setHeading('', 'Nickname', 'Attended', 'Attended At')
-
-    attendances.forEach(({ nickname, attended, attendedAt }, i) => {
-      table.addRow(i + 1, nickname, attended, attendedAt)
-    })
-
+    const rows = await getAttendanceByDate(cohort, new Date())
+    const table = toTable(rows)
     await interaction.reply({
-      content: '```' + table.toString() + '```',
+      content: '```here' + table.toString() + '```',
       ephemeral: true,
     })
   } else if (commandName === 'attend') {
@@ -43,19 +36,19 @@ client.on('interactionCreate', async (interaction) => {
       userId,
     }
 
-    const { error } = await addAttendance(data)
-
-    if (error) {
+    try {
+      await addAttendance(data)
+      await interaction.reply({
+        content: 'Kia pai te ra 😄',
+        ephemeral: true,
+      })
+    } catch (error) {
       console.error(error)
       await interaction.reply({
         content: 'Something went wrong',
         ephemeral: true,
       })
     }
-    await interaction.reply({
-      content: 'Kia pai te ra 😄',
-      ephemeral: true,
-    })
   }
 })
 
