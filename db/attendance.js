@@ -12,26 +12,22 @@ const addAttendance = (attendance, db = connection) => {
   return db('attendances').insert(row)
 }
 
-const listAttendance = (cohort, date, db = connection) => {
+const getAttendanceByDate = (cohort, date, db = connection) => {
   const endOf = moment(date).endOf('day').valueOf()
   const startOf = moment(date).startOf('day').valueOf()
-  return db
-    .raw(
-      `SELECT 
+  return db.raw(
+    `SELECT 
 	a.nickname
-	, CASE WHEN ${+startOf} < max(a.created_at) < ${+endOf} THEN 1 ELSE 0 END as attended
+	, CASE WHEN ? < max(a.created_at) and max(a.created_at) < ?  THEN 1 ELSE 0 END as attended
   , max(a.created_at) as attendedAt
 from attendances as a
-where a.cohort = '${cohort}'
-group by a.nickname`
-    )
-    .then((res) => console.log(res))
-    .catch((error) => console.error(error))
+where a.cohort = ?
+group by a.nickname`,
+    [+startOf, +endOf, cohort]
+  )
 }
-
-// listAttendance('kahikatea 2022', new Date())
 
 module.exports = {
   addAttendance,
-  listAttendance,
+  getAttendanceByDate,
 }

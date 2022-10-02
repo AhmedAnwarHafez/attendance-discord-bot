@@ -1,6 +1,6 @@
 const { Client, GatewayIntentBits } = require('discord.js')
 
-const { addAttendance, listAttendance } = require('./db/attendance')
+const { addAttendance, getAttendanceByDate } = require('./db/attendance')
 const dotenv = require('dotenv')
 
 dotenv.config()
@@ -17,7 +17,7 @@ client.on('interactionCreate', async (interaction) => {
 
   if (commandName === 'list') {
     const cohort = interaction.channel.parent.name
-    const attendances = await listAttendance(cohort, new Date())
+    const attendances = await getAttendanceByDate(cohort, new Date())
     console.log(attendances)
     await interaction.reply({ content: 'Pong!', ephemeral: true })
   } else if (commandName === 'attend') {
