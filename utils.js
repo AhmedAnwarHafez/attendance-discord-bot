@@ -10,6 +10,10 @@ const format = (attendances) => {
 }
 
 const toTable = (rows) => {
+  if (rows.length === 0) {
+    return 'No records found for this cohort'
+  }
+
   const attendances = format(rows)
   const table = new AsciiTable3("Today's attendance")
   table.setHeading('', 'Nickname', 'Attended', 'Attended At')
@@ -18,7 +22,7 @@ const toTable = (rows) => {
     table.addRow(i + 1, nickname, attended, attendedAt)
   })
 
-  return table
+  return table.toString()
 }
 
 module.exports = {

@@ -21,7 +21,7 @@ client.on('interactionCreate', async (interaction) => {
     const rows = await getAttendanceByDate(cohort, new Date())
     const table = toTable(rows)
     await interaction.reply({
-      content: '```here' + table.toString() + '```',
+      content: '```' + table + '```',
       ephemeral: true,
     })
   } else if (commandName === 'attend') {
