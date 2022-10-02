@@ -12,26 +12,32 @@ exports.seed = async function (knex) {
     {
       user_id: 1,
       nickname: 'on-time student',
-      cohort: 'matai 2021',
+      cohort: 'Horoeka 2021',
       created_at: +before9AM.valueOf(),
     },
     {
       user_id: 1,
       nickname: 'on-time student',
-      cohort: 'matai 2021',
+      cohort: 'Horoeka 2021',
       created_at: +before9AM.subtract(1, 'd').valueOf(),
     },
     {
       user_id: 2,
       nickname: 'late student',
-      cohort: 'matai 2021',
+      cohort: 'Horoeka 2021',
       created_at: +after9AM.valueOf(),
     },
     {
       user_id: 2,
       nickname: 'late student',
-      cohort: 'matai 2021',
+      cohort: 'Horoeka 2021',
       created_at: +after9AM.subtract(1, 'day').valueOf(),
+    },
+    {
+      user_id: 3,
+      nickname: 'missed a day student',
+      cohort: 'Horoeka 2021',
+      created_at: +before9AM.subtract(2, 'day').valueOf(),
     },
   ])
 }
