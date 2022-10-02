@@ -1,4 +1,3 @@
-const { default: knex } = require('knex')
 const moment = require('moment')
 const connection = require('./connection')
 
