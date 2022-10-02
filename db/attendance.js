@@ -1,54 +1,36 @@
-const { createClient } = require('@supabase/supabase-js')
-const _ = require('lodash')
-
-const dotenv = require('dotenv')
+const { default: knex } = require('knex')
 const moment = require('moment')
-dotenv.config()
+const connection = require('./connection')
 
-const supabaseUrl = process.env.SUPABASE_URL
-const supabaseKey = process.env.SUPABASE_KEY
-const supabase = createClient(supabaseUrl, supabaseKey)
-
-const addAttendance = (attendance) => {
+const addAttendance = (attendance, db = connection) => {
   const { cohort, nickname, userId } = attendance
   const row = {
     user_id: userId,
     cohort,
     nickname,
+    created_at: +new Date(),
   }
-  return supabase.from('attendances').insert(row)
+  return db('attendances').insert(row)
 }
 
-const listAttendance = async (cohort, date) => {
-  const endOf = moment(date).endOf('day').toISOString()
-  const startOf = moment(date).startOf('day').toISOString()
-
-  const attended = await supabase
-    .from('attendances')
-    .select('nickname, created_at')
-    .eq('cohort', cohort)
-    .gt('created_at', startOf)
-    .lt('created_at', endOf)
-    .then((res) => res.data)
-
-  const notAttended = await supabase
-    .from('v_attendances')
-    .select('nickname')
-    .eq('cohort', cohort)
-    .not('created_at', 'gt', startOf)
-    .not('created_at', 'lt', endOf)
-    .then((res) => res.data)
-
-  const all = [...attended, ...notAttended]
-  const unique = _.uniqBy(all, (row) => row.nickname).map((row) => ({
-    name: row.nickname,
-    since: row.created_at ? moment(row).fromNow() : null,
-  }))
-  console.log(unique)
-  return unique
+const listAttendance = async (cohort, date, db = connection) => {
+  const endOf = moment(date).endOf('day').valueOf()
+  const startOf = moment(date).startOf('day').valueOf()
+  return db
+    .raw(
+      `SELECT 
+	a.nickname
+	, CASE WHEN ${+startOf} < max(a.created_at) < ${+endOf} THEN 1 ELSE 0 END as attended
+  , max(a.created_at) as attendedAt
+from attendances as a
+where a.cohort = '${cohort}'
+group by a.nickname`
+    )
+    .then((res) => console.log(res))
+    .catch((error) => console.error(error))
 }
 
-listAttendance('kahikatea 2022', new Date())
+// listAttendance('kahikatea 2022', new Date())
 
 module.exports = {
   addAttendance,

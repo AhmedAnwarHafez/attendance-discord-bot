@@ -5,6 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node .",
+    "production": "NODE_ENV=production node .",
+    "knex": "knex --knexfile db/knexfile.js",
+    "migrate": "knex migrate:latest"
   },
   "keywords": [
     "discord",
@@ -20,10 +23,13 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^1.35.7",
+    "@vscode/sqlite3": "^5.0.8",
     "discord.js": "^14.5.0",
     "dotenv": "^16.0.3",
+    "knex": "^2.3.0",
     "lodash": "^4.17.21",
-    "moment": "^2.29.4"
+    "moment": "^2.29.4",
+    "sqlite3": "^5.1.1"
   },
   "prettier": {
     "semi": false,
