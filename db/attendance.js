@@ -22,7 +22,8 @@ const getAttendanceByDate = async (cohort, date, db = connection) => {
   , max(a.created_at) as attended_at
 from attendances as a
 where a.cohort = ?
-group by a.nickname`,
+group by a.nickname
+order by max(a.created_at)`,
     [+startOf, +endOf, cohort]
   )
 
