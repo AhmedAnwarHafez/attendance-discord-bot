@@ -1,4 +1,4 @@
-## Tasks
+## User stories
 
 When a student runs `/attend` in any text channel in thier cohort's category, the following should happen:
 1. read server `nickname`
