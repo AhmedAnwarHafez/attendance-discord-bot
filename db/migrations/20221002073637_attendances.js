@@ -8,7 +8,7 @@ exports.up = function (knex) {
     table.bigint('user_id')
     table.string('nickname')
     table.string('cohort')
-    table.integer('created_at')
+    table.bigint('created_at')
   })
 }
 

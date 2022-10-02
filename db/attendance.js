@@ -13,7 +13,7 @@ const addAttendance = (attendance, db = connection) => {
   return db('attendances').insert(row)
 }
 
-const listAttendance = async (cohort, date, db = connection) => {
+const listAttendance = (cohort, date, db = connection) => {
   const endOf = moment(date).endOf('day').valueOf()
   const startOf = moment(date).startOf('day').valueOf()
   return db
