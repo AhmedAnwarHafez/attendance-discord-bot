@@ -15,16 +15,18 @@ const addAttendance = (attendance, db = connection) => {
 const getAttendanceByDate = (cohort, date, db = connection) => {
   const endOf = moment(date).endOf('day').valueOf()
   const startOf = moment(date).startOf('day').valueOf()
-  return db.raw(
-    `SELECT 
+  return db
+    .raw(
+      `SELECT 
 	a.nickname
 	, CASE WHEN ? < max(a.created_at) and max(a.created_at) < ?  THEN 1 ELSE 0 END as attended
   , max(a.created_at) as attendedAt
 from attendances as a
 where a.cohort = ?
 group by a.nickname`,
-    [+startOf, +endOf, cohort]
-  )
+      [+startOf, +endOf, cohort]
+    )
+    .then((res) => res.rows)
 }
 
 module.exports = {
