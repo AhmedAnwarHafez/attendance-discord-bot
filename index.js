@@ -1,4 +1,5 @@
 const { Client, GatewayIntentBits } = require('discord.js')
+const AsciiTable = require('ascii-table')
 
 const { addAttendance, getAttendanceByDate } = require('./db/attendance')
 const dotenv = require('dotenv')
@@ -19,7 +20,17 @@ client.on('interactionCreate', async (interaction) => {
     const cohort = interaction.channel.parent.name
     const attendances = await getAttendanceByDate(cohort, new Date())
     console.log(attendances)
-    await interaction.reply({ content: 'Pong!', ephemeral: true })
+    const table = new AsciiTable("Today's attendance")
+    table.setHeading('', 'Nickname', 'Attended', 'Attended At')
+
+    attendances.forEach(({ nickname, attended, attendedAt }, i) => {
+      table.addRow(i + 1, nickname, attended, attendedAt)
+    })
+
+    await interaction.reply({
+      content: '```' + table.toString() + '```',
+      ephemeral: true,
+    })
   } else if (commandName === 'attend') {
     const nickname =
       interaction.member.displayName || interaction.member.nickname
