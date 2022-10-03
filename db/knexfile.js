@@ -1,8 +1,7 @@
 const path = require('path')
 const dotenv = require('dotenv')
 
-dotenv.config()
-
+dotenv.config({ path: path.join(__dirname, '..', '.env') })
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
  */
@@ -16,17 +15,7 @@ module.exports = {
   },
   production: {
     client: 'postgresql',
-    connection: {
-      database: process.env.DATABASE_NAME,
-      host: process.env.DATABASE_HOST,
-      port: process.env.DATABASE_PORT,
-      user: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
-    },
+    connection: process.env.DATABASE_URL,
     pool: {
       min: 2,
       max: 10,
