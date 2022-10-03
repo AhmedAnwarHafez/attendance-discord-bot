@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node .",
-    "production": "NODE_ENV=production node .",
     "knex": "knex --knexfile db/knexfile.js",
-    "migrate": "knex migrate:latest"
+    "migrate": "knex migrate:latest knex --knexfile db/knexfile.js",
+    "build": "knex migrate:latest"
   },
   "keywords": [
     "discord",
