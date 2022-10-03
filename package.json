@@ -7,7 +7,7 @@
     "start": "node .",
     "knex": "knex --knexfile db/knexfile.js",
     "migrate": "knex migrate:latest knex --knexfile db/knexfile.js",
-    "build": "knex migrate:latest"
+    "build": "knex migrate:latest --knexfile db/knexfile.js"
   },
   "keywords": [
     "discord",
