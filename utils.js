@@ -19,7 +19,13 @@ const fromNow = (attendance) => ({
 const isOnTime = (attendance, date) => {
   const fiveInTheMorning = moment(date).set('hour', 7).set('minute', 0)
   const nineInTheMorning = moment(date).set('hour', 9).set('minute', 0)
-  const timeDiff = moment(attendance.attended_at).from(nineInTheMorning, true)
+  if (!attendance.attended_at) {
+    return {
+      ...attendance,
+      isOnTime: '-',
+    }
+  }
+  const timeDiff = moment(+attendance.attended_at).from(nineInTheMorning, true)
   const isOnTime = moment(+attendance.attended_at).isBetween(
     fiveInTheMorning,
     nineInTheMorning
